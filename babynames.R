@@ -29,3 +29,14 @@ the_nineties <- bb_names %>%
 
 write.csv(the_nineties)
 write_csv(the_nineties, file = "babynames_90s.csv")
+
+#Now that everything is up to date, make a visualisation of you and your team member’s names for a year of your choice.
+bb_team <- bb_names %>% 
+  filter(name %in% c("Emily", "Nicole", "Adri", "Linnea"))
+
+ggplot(data = bb_team %>% filter(year == 2010))+
+  geom_col(aes(x = name, y = n))
+
+ggplot(data = bb_names %>%filter(name=="Linnea"))+
+  geom_line(aes(x=year, y=n, color=sex))
+
