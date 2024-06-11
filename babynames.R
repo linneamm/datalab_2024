@@ -37,6 +37,7 @@ bb_team <- bb_names %>%
 ggplot(data = bb_team %>% filter(year == 2010))+
   geom_col(aes(x = name, y = n))
 
+#Make a visual that looks at your name over time. What happens if you color by sex?
 ggplot(data = bb_names %>%filter(name=="Linnea"))+
   geom_line(aes(x=year, y=n, color=sex))
 
