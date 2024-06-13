@@ -1,0 +1,64 @@
+---
+title: "LionelMessy"
+author: "Linnea Minich"
+date: "2024-06-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#load library
+library(tidyverse)
+library(dplyr)
+library(readr)
+dives <- read_csv('https://raw.githubusercontent.com/databrew/intro-to-data-science/main/data/whales-dives.csv')
+
+head(dives)
+
+messy_dives <- read_csv('https://raw.githubusercontent.com/databrew/intro-to-data-science/main/data/whales-dives-messy.csv')
+
+head(messy_dives)
+
+whales_clean <- dives 
+
+new_whales <- messy_dives %>%
+  mutate(Month = paste0("0",Month)) %>% 
+  mutate(YEAR = ifelse(YEAR == 15, paste0("2015"), paste0(YEAR))) %>% 
+  mutate( id = paste0( YEAR, Month, Day) ) %>%
+  mutate( sit = substr( sit , 10, 12 )) %>% 
+  mutate(id = paste0(id,sit)) %>% 
+  mutate(id = as.factor(id)) %>% 
+  drop_na()
+```
+
+```{r}
+new_whales <- new_whales %>% 
+  select(id, Species.ID, bhvr, PreyVolume, PreyDepth, Dive_Time, Surfacetime, Blow.Interval, Blow_number_count)
+
+new_whales <- new_whales %>% 
+  mutate(Species.ID = ifelse(Species.ID %in% c("FinWhale", "finderbender","FinW","fin", "fw", "FW"), paste0("FW"), paste0("HW")))
+
+```
+
+```{r}
+names(new_whales) <- c("id",
+                       "species",
+                       "behavior",
+                       "prey.volume", 
+                    "prey.depth",
+                    "dive.time",
+                    "surface.time",
+                    "blow.interval",
+                    "blow.number" )
+```
+
+```{r}
+new_whales <-new_whales %>% 
+  distinct(id, .keep_all = TRUE)
+```
+
+
+```{r}
+new_whales <- left_join(new_whales, whales_clean, by = "id")
+```
+
